@@ -1,0 +1,32 @@
+
+
+mysql> create table Persons(PersonID int primary key,Name varchar(100) not null,Aadhar bigint not null unique,Age int check(Age>18));
+
+mysql> CREATE TABLE orders (OrderID INT PRIMARY KEY,OrderNumber INT NOT NULL,PersonID INT, FOREIGN KEY (PersonID) REFERENCES Persons(PersonID));
+
+mysql> desc Persons;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| PersonID | int(11)      | NO   | PRI | NULL    |       |
+| Name     | varchar(100) | NO   |     | NULL    |       |
+| Aadhar   | bigint(20)   | NO   | UNI | NULL    |       |
+| Age      | int(11)      | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+
+mysql> desc Orders;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| OrderID     | int(11) | NO   | PRI | NULL    |       |
+| OrderNumber | int(11) | NO   |     | NULL    |       |
+| PersonID    | int(11) | YES  | MUL | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+
+alter table Employee add primary key(emp_no);
+
+alter table Department add primary key(dept_no);
+
+mysql> alter table Employee add constraint fk_dept foreign key(dept_no) references Department(dept_no) on delete cascade;
+
+alter table Orders drop primary key;
