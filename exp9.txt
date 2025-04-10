@@ -1,0 +1,109 @@
+// 1. Use database
+use inventory
+
+// 2. Insert documents into the 'products' collection
+db.products.insertMany([
+  {
+    "_id": 1,
+    "name": "Phone",
+    "price": 799,
+    "releaseDate": ISODate("2011-05-24"),
+    "spec": {
+      "ram": 4,
+      "screen": 6.5,
+      "cpu": 2.66
+    },
+    "color": ["white", "black"],
+    "storage": [64, 128, 256]
+  },
+  {
+    "_id": 2,
+    "name": "Tablet",
+    "price": 799,
+    "releaseDate": ISODate("2011-09-01"),
+    "spec": {
+      "ram": 16,
+      "screen": 9.5,
+      "cpu": 3.66
+    },
+    "color": ["white", "black", "purple"],
+    "storage": [128, 256, 512]
+  },
+  {
+    "_id": 3,
+    "name": "SmartPhone",
+    "price": 899,
+    "releaseDate": ISODate("2022-01-14"),
+    "spec": {
+      "ram": 12,
+      "screen": 9.7,
+      "cpu": 1.66
+    },
+    "color": ["blue"],
+    "storage": [16, 64, 128]
+  }
+])
+
+// 3. Display all documents
+db.products.find()
+
+// 4. Display product with _id = 3
+db.products.find({ _id: 3 })
+
+// 5. Display the first document
+db.products.findOne()
+
+// 6. Display name and price of product with _id = 2
+db.products.find({ _id: 2 }, { name: 1, price: 1 })
+
+// 7. Select all documents where price = 799
+db.products.find({ price: { $eq: 799 } })
+
+// 8. Delete document with _id = 1
+db.products.deleteOne({ _id: 1 })
+
+// 9. Documents where spec.ram = 12
+db.products.find({ "spec.ram": { $eq: 12 } }, { name: 1, "spec.ram": 1 })
+
+// 10. Documents where spec.screen < 7
+db.products.find({ "spec.screen": { $lt: 7 } })
+
+// 11. Products with price < 1000
+db.products.find({ price: { $lt: 1000 } }, { name: 1, price: 1 })
+
+// 12. Products with price = 699 or 799
+db.products.find({ price: { $in: [699, 799] } }, { name: 1, price: 1 })
+
+// 13. Documents where color contains "black" or "white"
+db.products.find({ color: { $in: ["black", "white"] } })
+
+// 14. Products where price is not 699 or 799
+db.products.find({ price: { $nin: [699, 799] } }, { name: 1, price: 1 })
+
+// 15. Products where price = 799 and color includes "white" or "black"
+db.products.find({
+  $and: [
+    { price: 799 },
+    { color: { $in: ["white", "black"] } }
+  ]
+}, { name: 1, price: 1, color: 1 })
+
+// 16. Price < 699 or > 799
+db.products.find({
+  $or: [
+    { price: { $lt: 699 } },
+    { price: { $gt: 799 } }
+  ]
+})
+
+// 17. Sort by releaseDate descending
+db.products.find({ releaseDate: { $exists: 1 } }, { name: 1, releaseDate: 1 }).sort({ releaseDate: -1 })
+
+// 18. Sort by name and price ascending
+db.products.find().sort({ name: 1, price: 1 })
+
+// 19. Get most expensive product
+db.products.find().sort({ price: -1 }).limit(1)
+
+// 20. Display 3rd and 4th records (using skip and limit)
+db.products.find().skip(2).limit(2)
