@@ -1,0 +1,262 @@
+test> use college;
+switched to db college
+college> db.class.insertMany([
+... {
+... rollno: 1,name: "Ananthu",age: 21,gender: "M",div: "A",sub: ["Math","Physics"], credit: 4},
+... {rollno: 2,name: "Akhil",age:21,gender: "M",div: "B",sub: ["Chemistry","Math"], credit: 5},]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('67f7e5486c9947a697b5f899'),
+    '1': ObjectId('67f7e5486c9947a697b5f89a')
+  }
+}
+college> db.class.find();
+[
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f899'),
+    rollno: 1,
+    name: 'Ananthu',
+    age: 21,
+    gender: 'M',
+    div: 'A',
+    sub: [ 'Math', 'Physics' ],
+    credit: 4
+  },
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f89a'),
+    rollno: 2,
+    name: 'Akhil',
+    age: 21,
+    gender: 'M',
+    div: 'B',
+    sub: [ 'Chemistry', 'Math' ],
+    credit: 5
+  }
+]
+college> db.class.aggregate([
+... {
+... $group:{_id: "$div",totalStudents: { $sum: 1},
+... maxAge: {$max: "$age"}}}])
+[
+  { _id: 'A', totalStudents: 1, maxAge: 21 },
+  { _id: 'B', totalStudents: 1, maxAge: 21 }
+]
+college> db.class.aggregate([
+... {$match: {age: {$gt: 20}}}]);
+[
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f899'),
+    rollno: 1,
+    name: 'Ananthu',
+    age: 21,
+    gender: 'M',
+    div: 'A',
+    sub: [ 'Math', 'Physics' ],
+    credit: 4
+  },
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f89a'),
+    rollno: 2,
+    name: 'Akhil',
+    age: 21,
+    gender: 'M',
+    div: 'B',
+    sub: [ 'Chemistry', 'Math' ],
+    credit: 5
+  }
+]
+college> db.class.find().sort({ age: -1});
+[
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f899'),
+    rollno: 1,
+    name: 'Ananthu',
+    age: 21,
+    gender: 'M',
+    div: 'A',
+    sub: [ 'Math', 'Physics' ],
+    credit: 4
+  },
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f89a'),
+    rollno: 2,
+    name: 'Akhil',
+    age: 21,
+    gender: 'M',
+    div: 'B',
+    sub: [ 'Chemistry', 'Math' ],
+    credit: 5
+  }
+]
+college> db.class.aggregate([
+... { $match: {div: "B"}},
+... {$sort: {age : 1}},
+... {$limit: 1}]);
+[
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f89a'),
+    rollno: 2,
+    name: 'Akhil',
+    age: 21,
+    gender: 'M',
+    div: 'B',
+    sub: [ 'Chemistry', 'Math' ],
+    credit: 5
+  }
+]
+college> db.class.aggregate([{
+... $group: {
+... _id: null,avgAge: {$avg: "$age"}}}]);
+college> db.class.aggregate([{$group: {_id: "$gender",count: { $sum: 1}}}]);
+[ { _id: 'M', count: 2 } ]
+college> db.class.aggregate([{ $unwind: "$sub"}]);
+[
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f899'),
+    rollno: 1,
+    name: 'Ananthu',
+    age: 21,
+    gender: 'M',
+    div: 'A',
+    sub: 'Math',
+    credit: 4
+  },
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f899'),
+    rollno: 1,
+    name: 'Ananthu',
+    age: 21,
+    gender: 'M',
+    div: 'A',
+    sub: 'Physics',
+    credit: 4
+  },
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f89a'),
+    rollno: 2,
+    name: 'Akhil',
+    age: 21,
+    gender: 'M',
+    div: 'B',
+    sub: 'Chemistry',
+    credit: 5
+  },
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f89a'),
+    rollno: 2,
+    name: 'Akhil',
+    age: 21,
+    gender: 'M',
+    div: 'B',
+    sub: 'Math',
+    credit: 5
+  }
+]
+college> db.class.find().sort({credit: -1}).limit(1);
+[
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f89a'),
+    rollno: 2,
+    name: 'Akhil',
+    age: 21,
+    gender: 'M',
+    div: 'B',
+    sub: [ 'Chemistry', 'Math' ],
+    credit: 5
+  }
+]
+college> db.class.find({name: /^T/});
+
+college> db.class.find({ sub: "Math"});
+[
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f899'),
+    rollno: 1,
+    name: 'Ananthu',
+    age: 21,
+    gender: 'M',
+    div: 'A',
+    sub: [ 'Math', 'Physics' ],
+    credit: 4
+  },
+  {
+    _id: ObjectId('67f7e5486c9947a697b5f89a'),
+    rollno: 2,
+    name: 'Akhil',
+    age: 21,
+    gender: 'M',
+    div: 'B',
+    sub: [ 'Chemistry', 'Math' ],
+    credit: 5
+  }
+]
+college> db.class.aggregate([{ $sort: { rollno: 1 } }, { $group: { _id: "$div", firstStudent: { $first: "$$ROOT" } } }]);
+[
+  {
+    _id: 'B',
+    firstStudent: {
+      _id: ObjectId('67f7e5486c9947a697b5f89a'),
+      rollno: 2,
+      name: 'Akhil',
+      age: 21,
+      gender: 'M',
+      div: 'B',
+      sub: [ 'Chemistry', 'Math' ],
+      credit: 5
+    }
+  },
+  {
+    _id: 'A',
+    firstStudent: {
+      _id: ObjectId('67f7e5486c9947a697b5f899'),
+      rollno: 1,
+      name: 'Ananthu',
+      age: 21,
+      gender: 'M',
+      div: 'A',
+      sub: [ 'Math', 'Physics' ],
+      credit: 4
+    }
+  }
+]
+college> db.class.aggregate([{ $sort: {age: 1}},
+... {
+... $group: {_id: "$div",lastStudent: {$last: "$$ROOT"}}}]);
+[
+  {
+    _id: 'A',
+    lastStudent: {
+      _id: ObjectId('67f7e5486c9947a697b5f899'),
+      rollno: 1,
+      name: 'Ananthu',
+      age: 21,
+      gender: 'M',
+      div: 'A',
+      sub: [ 'Math', 'Physics' ],
+      credit: 4
+    }
+  },
+  {
+    _id: 'B',
+    lastStudent: {
+      _id: ObjectId('67f7e5486c9947a697b5f89a'),
+      rollno: 2,
+      name: 'Akhil',
+      age: 21,
+      gender: 'M',
+      div: 'B',
+      sub: [ 'Chemistry', 'Math' ],
+      credit: 5
+    }
+  }
+]
+college> db.class.createIndex({rollno:1},{name: "rollno_index"});
+rollno_index
+college> db.class.getIndexes();
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { rollno: 1 }, name: 'rollno_index' }
+]
+college> db.class.dropIndex("rollno_index");
+{ nIndexesWas: 2, ok: 1 }
