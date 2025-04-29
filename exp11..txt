@@ -1,0 +1,127 @@
+*********************************************************
+
+Terminal 1
+
+*********************************************************
+
+
+Microsoft Windows [Version 10.0.19045.5737]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\MLM>mongosh
+Current Mongosh Log ID: 6810481b8c98cb000fb5f898
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.0
+Using MongoDB:          8.0.6
+Using Mongosh:          2.5.0
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-04-29T08:35:05.470+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> use mongodbbackup
+switched to db mongodbbackup
+mongodbbackup> db.createCollection("Students")
+{ ok: 1 }
+mongodbbackup> db.createCollection("teachers")
+{ ok: 1 }
+mongodbbackup> use mongodbbackup
+already on db mongodbbackup
+mongodbbackup> db.dropDatabase()
+{ ok: 1, dropped: 'mongodbbackup' }
+mongodbbackup> show dbs
+admin           40.00 KiB
+college         56.00 KiB
+config         108.00 KiB
+inventory       72.00 KiB
+local           72.00 KiB
+mongodbbackup   16.00 KiB
+myDatabase      72.00 KiB
+test            56.00 KiB
+mongodbbackup>
+
+
+
+
+*********************************************
+
+Terminal 2
+
+*********************************************
+
+
+Microsoft Windows [Version 10.0.19045.5737]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\MLM>cd C:\backup
+
+C:\backup>set PATH=C:\Program Files\mongo-database-tools\bin;%PATH%
+
+C:\backup>mongodump
+2025-04-29T09:06:09.508+0530    writing admin.system.version to dump\admin\system.version.bson
+2025-04-29T09:06:09.514+0530    done dumping admin.system.version (1 document)
+2025-04-29T09:06:09.515+0530    writing test.class to dump\test\class.bson
+2025-04-29T09:06:09.516+0530    writing inventory.products to dump\inventory\products.bson
+2025-04-29T09:06:09.516+0530    writing myDatabase.products to dump\myDatabase\products.bson
+2025-04-29T09:06:09.517+0530    writing college.class to dump\college\class.bson
+2025-04-29T09:06:09.530+0530    done dumping inventory.products (2 documents)
+2025-04-29T09:06:09.531+0530    writing mongodbbackup.Students to dump\mongodbbackup\Students.bson
+2025-04-29T09:06:09.533+0530    done dumping mongodbbackup.Students (0 documents)
+2025-04-29T09:06:09.533+0530    writing mongodbbackup.teachers to dump\mongodbbackup\teachers.bson
+2025-04-29T09:06:09.535+0530    done dumping mongodbbackup.teachers (0 documents)
+2025-04-29T09:06:09.543+0530    done dumping test.class (2 documents)
+2025-04-29T09:06:09.553+0530    done dumping myDatabase.products (4 documents)
+2025-04-29T09:06:09.564+0530    done dumping college.class (2 documents)
+
+C:\backup>mongorestore
+2025-04-29T09:08:57.090+0530    using default 'dump' directory
+2025-04-29T09:08:57.091+0530    preparing collections to restore from
+2025-04-29T09:08:57.093+0530    don't know what to do with file "dump\prelude.json", skipping...
+2025-04-29T09:08:57.094+0530    reading metadata for test.class from dump\test\class.metadata.json
+2025-04-29T09:08:57.094+0530    reading metadata for college.class from dump\college\class.metadata.json
+2025-04-29T09:08:57.094+0530    reading metadata for inventory.products from dump\inventory\products.metadata.json
+2025-04-29T09:08:57.094+0530    reading metadata for mongodbbackup.Students from dump\mongodbbackup\Students.metadata.json
+2025-04-29T09:08:57.095+0530    reading metadata for mongodbbackup.teachers from dump\mongodbbackup\teachers.metadata.json
+2025-04-29T09:08:57.095+0530    reading metadata for myDatabase.products from dump\myDatabase\products.metadata.json
+2025-04-29T09:08:57.096+0530    restoring to existing collection myDatabase.products without dropping
+2025-04-29T09:08:57.096+0530    restoring myDatabase.products from dump\myDatabase\products.bson
+2025-04-29T09:08:57.096+0530    restoring to existing collection inventory.products without dropping
+2025-04-29T09:08:57.096+0530    restoring inventory.products from dump\inventory\products.bson
+2025-04-29T09:08:57.096+0530    restoring to existing collection test.class without dropping
+2025-04-29T09:08:57.097+0530    restoring test.class from dump\test\class.bson
+2025-04-29T09:08:57.101+0530    restoring to existing collection college.class without dropping
+2025-04-29T09:08:57.101+0530    restoring college.class from dump\college\class.bson
+2025-04-29T09:08:57.115+0530    continuing through error: E11000 duplicate key error collection: myDatabase.products index: _id_ dup key: { _id: ObjectId('67f7899de27393e472b5f899') }
+2025-04-29T09:08:57.115+0530    continuing through error: E11000 duplicate key error collection: myDatabase.products index: _id_ dup key: { _id: ObjectId('67f7899de27393e472b5f89a') }
+2025-04-29T09:08:57.115+0530    continuing through error: E11000 duplicate key error collection: myDatabase.products index: _id_ dup key: { _id: ObjectId('67f78bb0e8c0380b4bb5f899') }
+2025-04-29T09:08:57.115+0530    continuing through error: E11000 duplicate key error collection: myDatabase.products index: _id_ dup key: { _id: ObjectId('67f78bb0e8c0380b4bb5f89a') }
+2025-04-29T09:08:57.115+0530    finished restoring myDatabase.products (0 documents, 4 failures)
+2025-04-29T09:08:57.126+0530    continuing through error: E11000 duplicate key error collection: inventory.products index: _id_ dup key: { _id: 2 }
+2025-04-29T09:08:57.126+0530    continuing through error: E11000 duplicate key error collection: inventory.products index: _id_ dup key: { _id: 3 }
+2025-04-29T09:08:57.126+0530    finished restoring inventory.products (0 documents, 2 failures)
+2025-04-29T09:08:57.152+0530    continuing through error: E11000 duplicate key error collection: college.class index: _id_ dup key: { _id: ObjectId('680757487bdd34b3e5b5f899') }
+2025-04-29T09:08:57.152+0530    continuing through error: E11000 duplicate key error collection: college.class index: _id_ dup key: { _id: ObjectId('680757487bdd34b3e5b5f89a') }
+2025-04-29T09:08:57.153+0530    finished restoring college.class (0 documents, 2 failures)
+2025-04-29T09:08:57.171+0530    continuing through error: E11000 duplicate key error collection: test.class index: _id_ dup key: { _id: ObjectId('6808759fb5264e8b0cb5f899') }
+2025-04-29T09:08:57.171+0530    continuing through error: E11000 duplicate key error collection: test.class index: _id_ dup key: { _id: ObjectId('6808759fb5264e8b0cb5f89a') }
+2025-04-29T09:08:57.173+0530    finished restoring test.class (0 documents, 2 failures)
+2025-04-29T09:08:57.193+0530    restoring mongodbbackup.Students from dump\mongodbbackup\Students.bson
+2025-04-29T09:08:57.201+0530    restoring mongodbbackup.teachers from dump\mongodbbackup\teachers.bson
+2025-04-29T09:08:57.203+0530    finished restoring mongodbbackup.Students (0 documents, 0 failures)
+2025-04-29T09:08:57.212+0530    finished restoring mongodbbackup.teachers (0 documents, 0 failures)
+2025-04-29T09:08:57.212+0530    no indexes to restore for collection mongodbbackup.Students
+2025-04-29T09:08:57.213+0530    no indexes to restore for collection myDatabase.products
+2025-04-29T09:08:57.216+0530    no indexes to restore for collection test.class
+2025-04-29T09:08:57.217+0530    no indexes to restore for collection inventory.products
+2025-04-29T09:08:57.217+0530    no indexes to restore for collection mongodbbackup.teachers
+2025-04-29T09:08:57.218+0530    no indexes to restore for collection college.class
+2025-04-29T09:08:57.218+0530    0 document(s) restored successfully. 10 document(s) failed to restore.
+
+C:\backup>show dbs
+'show' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\backup>
+
